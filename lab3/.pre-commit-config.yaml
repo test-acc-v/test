@@ -1,0 +1,49 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        stages: [pre-commit, pre-push]
+        args:
+          - '-l'
+          - '79'
+          - '-t'
+          - 'py312'
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.2
+    hooks:
+      - id: flake8
+        stages: [pre-commit, pre-push]
+        args:
+          - '--ignore'
+          - 'E731'
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.0
+    hooks:
+      - id: isort
+        stages: [pre-commit, pre-push]
+        args:
+          - '-l'
+          - '79'
+          - '--profile'
+          - 'black'
+
+  - repo: local
+    hooks:
+      - id: pytest-cov
+        name: Run tests
+        entry: poetry run --directory ./lab3 pytest --cov --cov-report=term-missing --cov-report=html:.coverage-html --cov-fail-under=100
+        files: ^tests/.*\.py$
+        verbose: true
+        types: [python]
+        always_run: true
+        language: system
+        stages: [pre-commit, pre-push]
